@@ -13,9 +13,9 @@ class Player(pygame.sprite.Sprite):
         self.isAlive = True
         self.isFalling = True
         self.collider = Rect(self.x, self.y, 32,32)
-        self.rect = self.image.get_rect(topleft=(x, y))
         ##charger l'image du joueur
-        self.image = pygame.image.load("../assets/character.png").convert_alpha()
+        self.image = pygame.image.load("./assets/character.png")
+        self.rect = self.image.get_rect(topleft=(x, y))
 
     def jump(self):
         if not self.isJumping:
