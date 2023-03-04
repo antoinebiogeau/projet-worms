@@ -1,10 +1,11 @@
 import pygame
 
 class Projectile:
-    def __init__(self, position):
+    def __init__(self, position, velocity, type="GSF"):
         self.rect = pygame.Rect(position[0],position[1], 10,10)
-        self.velocity = (-2,0)
+        self.velocity = velocity
         self.time = 0
+        self.type = type
         
 
     def update(self, screen):
@@ -23,12 +24,20 @@ class Projectile:
             self.rect.x = self.velocity[0] * self.time + self.rect.x
             self.rect.y = 9.81/2 * self.time ** 2 + self.velocity[1] * self.time + self.rect.y
             pygame.draw.rect(screen, (255,0,0), self.rect)
+        self.time += 0.005
+        self.rect.x = self.velocity[0] * self.time + self.rect.x
+        self.rect.y = 9.81/2 * self.time ** 2 + self.velocity[1] * self.time + self.rect.y
+        pygame.draw.rect(screen, (255,0,0), self.rect)
 
     def collide(self, target):
        if self.rect.colliderect(target.rect):
            target.hp -= 50
+           print("Projectile collide")
            return True
        return False
+    
+    def explode():
+        pass
 
     
         

@@ -3,20 +3,22 @@ import Constant
 from key import Key
 from Projectile import Projectile
 class Player(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, position, team):
         super().__init__()
         self.hp = 100
+        self.isCurrent = False
         self.actions = {
             "walk_left": False,
             "walk_right": False,
-            "jump": False
+            "jump": False,
+            "shooting_stance": False
         }
         self.velocity = {
             "x": 0,
             "y": 0
         }
         self.constraints = {
-            "isFalling": False
+            "isFalling": True
         }
         self.projectiles = []
         
@@ -27,42 +29,68 @@ class Player(pygame.sprite.Sprite):
             "mask": pygame.Mask((self.rect.width - 10, self.rect.height * 0.15)),
             "offset": (self.rect.x + 5, self.rect.y + self.rect.height * 0.9 + 2),
         }
+        self.xAngle = 50
+        self.yAngle = -50
+        self.force = 1
+        self.isShooting = False
+        self.rect.x = position[0]
+        self.rect.y = position[1]
+        self.team = team
 
     def update(self, screen):
-        self.checkActions()
-        self.jump()
+        if self.isCurrent:
+            self.checkActions()
+            self.jump()
+            #draw UI
         if self.constraints["isFalling"]:
             self.rect.y += 1 + self.velocity["y"]
         else:
             self.rect.y += self.velocity["y"]
-        self.rect.x += 1 if self.actions["walk_right"] else -1 if  self.actions["walk_left"] else 0
-        #print(self.constraints["isFalling"])
+        if not self.actions["shooting_stance"]:
+            self.rect.x += 1 if self.actions["walk_right"] else -1 if  self.actions["walk_left"] else 0
+            #print(self.constraints["isFalling"])
+        if self.actions["shooting_stance"]:
+            pygame.draw.line(screen, (255,0,0), (self.rect.x + self.rect.width / 2, self.rect.y + self.rect.height / 2),  (self.rect.x + self.rect.width/2 + self.xAngle, self.rect.y + self.rect.height/2 + self.yAngle))
 
-        #draw UI
         screen.blit(self.image, self.rect)
-        pygame.draw.rect(screen, Constant.RED_TEAM, (self.rect.x, self.rect.y - 10, self.rect.width  * (self.hp / 100), 5))
-        pygame.draw.rect(screen, (100,0,0), (self.rect.x, self.rect.y - 10, self.rect.width, 5), 1)
+        pygame.draw.rect(screen, (255,0,0) if self.team == 0 else (0,0,255), (self.rect.x, self.rect.y - 10, self.rect.width  * (self.hp / 100), 5))
+        pygame.draw.rect(screen, (100,0,0) if self.team == 0 else (0,0,100), (self.rect.x, self.rect.y - 10, self.rect.width, 5), 1)
 
+            
     def collide(self):
-        pass
+        if self.rect.y + self.rect.height > Constant.GROUND_LEVEL:
+            self.constraints["isFalling"] = False
+        else:
+            self.constraints["isFalling"] = True
 
     
     def checkActions(self):
-        if Key().get_key_down(pygame.K_RIGHT):
-            self.actions["walk_right"] = True
-        else:
-            self.actions["walk_right"] = False
-        if Key().get_key_down(pygame.K_LEFT):
-            self.actions["walk_left"] = True
-        else:
-            self.actions["walk_left"] = False
-        if Key().get_key_down(pygame.K_UP) and not self.actions["jump"] and not self.constraints["isFalling"]:
-            self.actions["jump"] = True
-        if Key().get_key_down(pygame.K_SPACE):
-            self.hp -= 0.1
-        if Key().get_key_down(pygame.K_f):
-            P = Projectile("GSF")
-            self.projectiles.append(P)
+            if Key().get_key_down(pygame.K_RIGHT):
+                self.actions["walk_right"] = True
+            else:
+                self.actions["walk_right"] = False
+            if Key().get_key_down(pygame.K_LEFT):
+                self.actions["walk_left"] = True
+            else:
+                self.actions["walk_left"] = False
+            if Key().get_key_down(pygame.K_UP) and not self.actions["jump"] and not self.constraints["isFalling"]:
+                self.actions["jump"] = True
+            if Key().get_key_down(pygame.K_SPACE):
+                self.hp -= 0.1
+            if Key().get_key_down(pygame.K_f):
+                self.actions["shooting_stance"] = True
+            else:
+                self.actions["shooting_stance"] = False
+            if self.actions["shooting_stance"]:
+                if (Key().get_key_down(pygame.K_LEFT)):
+                    if (self.xAngle > - 100):
+                        self.xAngle -= 1
+                        self.yAngle -= 1 if self.xAngle > 0 else -1
+                    
+                if (Key().get_key_down(pygame.K_RIGHT)):
+                    if (self.xAngle < 100):
+                        self.xAngle += 1
+                        self.yAngle -= 1 if self.xAngle < 0 else -1
 
 
         #if shift pressed, put player in shoot stance
@@ -80,6 +108,17 @@ class Player(pygame.sprite.Sprite):
             self.actions["jump"] = False
         if self.constraints["isFalling"] == False:
             self.time = 0
+
+    def shoot(self):
+        print(self.isCurrent)
+        if self.actions["shooting_stance"]:
+            print("Current : " + str(self.team))
+            if Key().get_key_down(pygame.K_r):
+                pygame.time.delay(1000)
+                print("shooting")
+                self.actions["shooting_stance"] = False
+                return Projectile((self.rect.x + self.rect.width / 2 + self.xAngle, self.rect.y + self.rect.height / 2 + self.yAngle), (self.xAngle / 10, self.yAngle / 10))
+
 
     def drawColliders(self, screen):
         screen.blit(self.collider["mask"].to_surface(setcolor=(0,255,0,255)), (self.rect.x + 5, self.rect.y + self.rect.height))

@@ -13,32 +13,53 @@ isRunning = True
 background = pygame.image.load("assets/bg.webp").convert()
 terrain = pygame.image.load("assets/terrain.png").convert_alpha()
 terrainMask = pygame.mask.from_surface(terrain)
-playerOne = Player()
+playerOne = Player((20,0), 0)
+playerTwo = Player((220,0), 1)
+Players = [playerOne, playerTwo]
+current_player = 0
+playerOne.isCurrent = True 
+
 projectileInstances = []
-projectileInstances.append(Projectile((200,0)))
-projectileInstances.append(Projectile((300,0)))
+
 
 
 while isRunning:
     screen.blit(background,(0,-100))
-    screen.blit(terrain, (0,-200))
-    screen.blit(terrainMask.to_surface(unsetcolor=(0,0,0,0),setcolor=(255,255,255,255)),(0,-200))
-    #pygame.draw.rect(screen, Constant.GROUND_COLOR, Constant.GROUND_POSITION)
+    screen.blit(terrain, (0,0))
+    #screen.blit(terrainMask.to_surface(unsetcolor=(0,0,0,0),setcolor=(255,255,255,255)),(0,-200))
+    pygame.draw.rect(screen, Constant.GROUND_COLOR, Constant.GROUND_POSITION)
     
     playerOne.update(screen)
+    playerTwo.update(screen)
+    potentialShoot = playerOne.shoot() if playerOne.isCurrent else playerTwo.shoot()
+    if potentialShoot is not None:
+        if playerOne.isCurrent:
+            playerTwo.isCurrent = True
+            playerOne.isCurrent = not playerOne.isCurrent
+            
+        else:
+            playerOne.isCurrent = True
+            playerTwo.isCurrent = not playerTwo.isCurrent
+            
+        projectileInstances.append(potentialShoot)
     for projectile in projectileInstances:
         projectile.update(screen)
-        if projectile.collide(playerOne):
+        if projectile.collide(playerOne) or projectile.collide(playerTwo) or projectile.rect.x < -1000 or projectile.rect.x > 1000 or projectile.rect.y > 500:
             projectileInstances.remove(projectile)
             del projectile
     
+
     #playerOne.drawColliders(screen)
-    #playerOne.collide(terrainMask, (0,-200), screen)
-    if playerOne.hp <=0:         
-        isRunning = False
+    playerOne.collide()
+    playerTwo.collide()
     ground = pygame.Rect(Constant.GROUND_POSITION)
     #playerOne.collide(ground)
-
+    if Players[current_player].hp <= 0:
+        current_player.isCurrent = False
+        current_player = (current_player + 1) % len(Players)
+        current_player.isCurrent = True
+    if all(player.hp <= 0 for player in Players):
+        isRunning = False
     pygame.display.flip()
     #checkEvents
     Key().update()
