@@ -17,11 +17,15 @@ playerOne = Player()
 while isRunning:
     screen.blit(background,(0,0))
     pygame.draw.rect(screen, Constant.GROUND_COLOR, Constant.GROUND_POSITION)
-    screen.blit(playerOne.image, playerOne.rect)
-    playerOne.update()
+   
+    playerOne.update(screen)
+    if playerOne.hp <=0:         
+        isRunning = False
     ground = pygame.Rect(Constant.GROUND_POSITION)
     playerOne.collide(ground)
 
     pygame.display.flip()
     #checkEvents
     Key().update()
+
+pygame.quit()
