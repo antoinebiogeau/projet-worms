@@ -12,7 +12,7 @@ class weapon(pygame.sprite.Sprite):
         self.x = x
         self.y = y
         self.isAlive = True
-        self.image = pygame.image.load("assets/grenade.jpg")
+        self.image = pygame.image.load("assets/grenade2.png")
         self.rect = self.image.get_rect()
         self.gravity =8.81
         self.timeToExplode = 5000
@@ -48,6 +48,11 @@ class weapon(pygame.sprite.Sprite):
         return positions
 
     def move(self, dt):
+        print(self.x, self.y)
+        print(self.rect.x, self.rect.y)
+        self.rect.x += self.x
+        self.rect.y -= self.y
+        self.collider = self.rect
         # Calculer la position actuelle du projectile
         self.time = 0
         for i in range(0, dt):
@@ -55,13 +60,15 @@ class weapon(pygame.sprite.Sprite):
             print(self.time)
             pos_x = self.x + self .speed * math.cos(math.radians(self.angle)) * (self.time)
             pos_y = self.y - self.speed * math.sin(math.radians(self.angle)) * (self.time) + 0.5 * self.gravity * (self.time ) ** 2 
-            pygame.draw.circle(self.image, (255, 0, 0), (pos_x, pos_y), 5000)
             print(pos_x, pos_y)
             # Mettre à jour la position et la collider du projectile
-            self.rect.x = pos_x
-            self.rect.y = pos_y
+            self.x = pos_x
+            self.y = pos_y
+            self.rect.x += pos_x
+            self.rect.y -= pos_y
             print(self.rect.x, self.rect.y)
             self.collider = self.rect
+            
 
             # Si le projectile a atteint le temps d'explosion, le faire exploser
         if self.time >= self.timeToExplode:

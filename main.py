@@ -23,7 +23,7 @@ while running:
     ##appliquer la gravité au joueur c'est a dire le faire tomber si il n'est pas sur le sol 
     game.player.gravity()
     ##regarder si le joueur est en collision avec le sol
-    ground = pygame.Rect(CONSTANT.GROUND_POSITION)
+    ground = pygame.Rect(CONSTANT.GROUND_POSITION)           
     game.player.collider(ground)
     pygame.display.flip()
     for event in pygame.event.get():
@@ -47,7 +47,9 @@ while running:
                 # Créer une instance de la classe weapon avec les paramètres appropriés
                 p = weapon(10, game.player, 45, game.player.rect.x, game.player.rect.y)
                 screen.blit(p.image, p.rect)
-                p.move(10)
+                pygame.display.flip()
+                p.move(1000)
+                
                 
                 # Ajouter le weapon à la liste des weapons du jeu
                 game.weapons.append(p)
