@@ -45,6 +45,9 @@ while running:
                 print(game.player.rect.y)
                 # Créer une instance de la classe weapon avec les paramètres appropriés
                 p = weapon((0, 0), 100, None, 45, 100, 100)
+                screen.blit(p.image, p.rect)
+                p.move(10)
+                
                 # Ajouter le weapon à la liste des weapons du jeu
                 game.weapons.append(p)
             elif event.key == pygame.K_x :
@@ -53,8 +56,3 @@ while running:
             elif event.key == pygame.K_z :
                 print("change perso")
                 game.change_player()
-    
-    # Mettre à jour la position des weapons
-    for p in game.weapons:
-        p.move(1/60)  # Utiliser le temps écoulé depuis la dernière frame comme paramètre
-        screen.blit(p.image, p.direction)
