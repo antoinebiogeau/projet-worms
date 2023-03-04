@@ -19,4 +19,4 @@ class Key:
                 self.key_pressed = pygame.key.get_pressed()
 
     def get_key_down(self, key):
-        return self.key_pressed[key]
+        return self.key_pressed[key]        
