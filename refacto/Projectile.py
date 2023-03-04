@@ -8,10 +8,21 @@ class Projectile:
         
 
     def update(self, screen):
-        self.time += 0.005
-        self.rect.x = self.velocity[0] * self.time + self.rect.x
-        self.rect.y = 1/2 * self.time ** 2 + self.velocity[1] * self.time + self.rect.y
-        pygame.draw.rect(screen, (255,0,0), self.rect)
+        if type == "GSF":
+            self.time += 0.005
+            self.rect.x = self.velocity[0] * self.time + self.rect.x
+            self.rect.y = 9.81/2 * self.time ** 2 + self.velocity[1] * self.time + self.rect.y
+            pygame.draw.rect(screen, (255,0,0), self.rect)
+        elif type == "GF":
+            self.time += 0.005
+            self.rect.x = self.velocity[0] * self.time + self.rect.x
+            self.rect.y = 9.81/2 * self.time ** 2 + self.velocity[1] * self.time + self.rect.y
+            pygame.draw.rect(screen, (255,0,0), self.rect)
+        elif type == "RK":
+            self.time += 0.005
+            self.rect.x = self.velocity[0] * self.time + self.rect.x
+            self.rect.y = 9.81/2 * self.time ** 2 + self.velocity[1] * self.time + self.rect.y
+            pygame.draw.rect(screen, (255,0,0), self.rect)
 
     def collide(self, target):
        if self.rect.colliderect(target.rect):

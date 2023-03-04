@@ -1,7 +1,7 @@
 import pygame
 import Constant
 from key import Key
-
+from Projectile import Projectile
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -18,6 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.constraints = {
             "isFalling": False
         }
+        self.projectiles = []
         
         self.image = pygame.image.load("assets/character.png")
         self.rect = self.image.get_rect()
@@ -59,10 +60,16 @@ class Player(pygame.sprite.Sprite):
             self.actions["jump"] = True
         if Key().get_key_down(pygame.K_SPACE):
             self.hp -= 0.1
+        if Key().get_key_down(pygame.K_f):
+            P = Projectile("GSF")
+            self.projectiles.append(P)
+
+
         #if shift pressed, put player in shoot stance
         #right and left changes the angle
         #else if stance is shooting, then shoot projectile at choosen angle
         #else do nothing
+
 
     def jump(self):
         if self.actions["jump"]:
