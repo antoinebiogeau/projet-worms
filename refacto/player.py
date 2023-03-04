@@ -5,6 +5,7 @@ from key import Key
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
+        self.hp = 100
         self.actions = {
             "walk_left": False,
             "walk_right": False,
@@ -21,7 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.time = 0
 
-    def update(self):
+    def update(self, screen):
         self.checkActions()
         self.jump()
         if self.constraints["isFalling"]:
@@ -30,6 +31,11 @@ class Player(pygame.sprite.Sprite):
             self.rect.y += self.velocity["y"]
         self.rect.x += 1 if self.actions["walk_right"] else -1 if  self.actions["walk_left"] else 0
         print(self.constraints["isFalling"])
+
+        #draw UI
+        screen.blit(self.image, self.rect)
+        pygame.draw.rect(screen, Constant.RED_TEAM, (self.rect.x, self.rect.y - 10, self.rect.width  * (self.hp / 100), 5))
+        pygame.draw.rect(screen, (100,0,0), (self.rect.x, self.rect.y - 10, self.rect.width, 5), 1)
 
     def collide(self, object):
         if self.rect.y + self.rect.height == object.y:
@@ -48,6 +54,8 @@ class Player(pygame.sprite.Sprite):
             self.actions["walk_left"] = False
         if Key().get_key_down(pygame.K_UP) and not self.actions["jump"] and not self.constraints["isFalling"]:
             self.actions["jump"] = True
+        if Key().get_key_down(pygame.K_SPACE):
+            self.hp -= 0.1
 
     def jump(self):
         if self.actions["jump"]:
