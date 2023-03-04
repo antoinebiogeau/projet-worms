@@ -38,7 +38,7 @@ while running:
                 print("gauche")
                 game.player.move_left()
             elif event.key == pygame.K_UP:
-                print("jump")
+                game.player.jump()
             elif event.key == pygame.K_SPACE:
                 print("tirer")
                 print(game.player.rect.x)

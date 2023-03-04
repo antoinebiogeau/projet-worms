@@ -12,12 +12,23 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load("assets/character.png")    
         self.rect  = self.image.get_rect()
         self.current_weapon = "GSF"
+        self.time = 0
+        self.is_jumping = False
 
     def move_right(self):
         self.rect.x += self.velocity
     
     def move_left(self):
         self.rect.x -= self.velocity
+
+    def jump(self):
+        self.is_jumping = True
+        if self.is_jumping:
+            self.rect.y -= 1
+            self.time += 0.5
+        if self.time > 3:
+            self.is_jumping = False
+        
     
     def gravity(self):
         self.rect.y += self.gravity_f 
