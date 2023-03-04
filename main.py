@@ -17,6 +17,7 @@ game.player.rect.y = 100
 
 while running:
     screen.blit(background, (0,0))
+    
     screen.blit(game.player.image, game.player.rect)
     pygame.draw.rect(screen, CONSTANT.GROUND_COLOR, CONSTANT.GROUND_POSITION)
     ##appliquer la gravité au joueur c'est a dire le faire tomber si il n'est pas sur le sol 
@@ -45,7 +46,8 @@ while running:
                 print(game.player.rect.y)
                 # Créer une instance de la classe weapon avec les paramètres appropriés
                 p = weapon(10, game.player, 45, game.player.rect.x, game.player.rect.y)
-                screen.blit(p.image, (0,0))
+                screen.blit(p.image, p.rect)
+                p.move(10)
                 
                 # Ajouter le weapon à la liste des weapons du jeu
                 game.weapons.append(p)
