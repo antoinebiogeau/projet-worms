@@ -18,9 +18,14 @@ class Player(pygame.sprite.Sprite):
         self.constraints = {
             "isFalling": True
         }
+        
         self.image = pygame.image.load("assets/character.png")
         self.rect = self.image.get_rect()
         self.time = 0
+        self.collider = {
+            "mask": pygame.Mask((self.rect.width - 10, self.rect.height * 0.1)),
+            "offset": (self.rect.x + 5, self.rect.y + self.rect.height * 0.9 + 2),
+        }
 
     def update(self, screen):
         self.checkActions()
@@ -38,10 +43,7 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(screen, (100,0,0), (self.rect.x, self.rect.y - 10, self.rect.width, 5), 1)
 
     def collide(self, object):
-        if self.rect.y + self.rect.height == object.y:
-            self.constraints["isFalling"] = False
-        else:
-            self.constraints["isFalling"] = True
+        pass
 
     def checkActions(self):
         if Key().get_key_down(pygame.K_RIGHT):
@@ -67,3 +69,5 @@ class Player(pygame.sprite.Sprite):
         if self.constraints["isFalling"] == False:
             self.time = 0
 
+    def drawColliders(self):
+        pygame.draw.rect(self.collider["mask"].to_surface(setcolor=(0,255,0,255)), self.collider["offset"])
