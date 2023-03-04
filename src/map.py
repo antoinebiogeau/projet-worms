@@ -2,8 +2,7 @@ import pygame
 
 class Map:
     def __init__(self,screenHeight, screenWidth):
-        self.bg = pygame.image.load("assets/bg.jpg").convert()
-        self.terrainBase = "assets/terrain.jpg"
+        self.terrainBase = "./assets/terrain.png"
         self.pixels = [[1] * screenHeight for i in range(screenWidth)]
         self.screenWidth = 600
         self.screenHeight = 300

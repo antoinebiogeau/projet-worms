@@ -1,7 +1,7 @@
 import pygame
 from pygame.locals import *
 import random
-
+from map import Map
 from player import Player
 
 # Initialisation de pygame
@@ -27,7 +27,7 @@ pygame.display.set_caption("Worms")
 # Création des sprites
 allSprites = pygame.sprite.Group()
 players = pygame.sprite.Group()
-projectiles = pygame.sprite.Group()
+weapons = pygame.sprite.Group()
 
 player1 = Player("player1", RED, 100, 100)
 player2 = Player("player2", BLUE, 500, 100)
@@ -36,6 +36,8 @@ allSprites.add(player1)
 allSprites.add(player2)
 players.add(player1)
 players.add(player2)
+##cree la map
+Map = Map(200,200)
 
 # Boucle de jeu
 clock = pygame.time.Clock()
@@ -53,7 +55,7 @@ while running:
 
     # Mise à jour des sprites
     dt = clock.tick(FPS)
-    allSprites.update(dt,  map.pixels) ##erreur la 
+    allSprites.update(dt,  Map.pixels) ##erreur la 
     projectiles.update(dt)
 
     # Gestion des collisions entre les joueurs et les projectiles
