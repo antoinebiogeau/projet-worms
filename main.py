@@ -44,9 +44,8 @@ while running:
                 print(game.player.rect.x)
                 print(game.player.rect.y)
                 # Créer une instance de la classe weapon avec les paramètres appropriés
-                p = weapon((0, 0), 100, None, 45, 100, 100)
-                screen.blit(p.image, p.rect)
-                p.move(10)
+                p = weapon(10, game.player, 45, game.player.rect.x, game.player.rect.y)
+                screen.blit(p.image, (0,0))
                 
                 # Ajouter le weapon à la liste des weapons du jeu
                 game.weapons.append(p)

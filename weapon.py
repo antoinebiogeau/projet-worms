@@ -4,9 +4,8 @@ import pygame
 
 
 class weapon(pygame.sprite.Sprite):
-    def __init__(self, direction, speed, owner, angle, x, y):
+    def __init__(self, speed, owner, angle, x, y):
         super().__init__()
-        self.direction = direction
         self.speed = speed
         self.owner = owner
         self.angle = angle
@@ -19,16 +18,6 @@ class weapon(pygame.sprite.Sprite):
         self.timeToExplode = 5000
         self.time = 0
         self.collider = self.rect
-
-    ##fonction qui calcul la trajectoire de la grenade et la fait se déplacer en fonction du temps
-    def update(self, dt):
-        self.time += dt
-        distance = self.speed * (self.time / 1000)
-        self.rect.x = self.owner.rect.x + distance * math.cos(math.radians(self.angle)) * self.direction
-        self.rect.y = self.owner.rect.y - distance * math.sin(math.radians(self.angle)) + 0.5 * self.gravity * (self.time / 1000) ** 2 * self.direction
-        if self.time >= self.timeToExplode:
-            self.isAlive = False
-            self.explode()
 
     def calculate_trajectory(self, x0, y0, v0, angle_degrees, gravity):
         # Convertir l'angle en radians
@@ -65,18 +54,19 @@ class weapon(pygame.sprite.Sprite):
             self.time += 1
             print(self.time)
             pos_x = self.x + self .speed * math.cos(math.radians(self.angle)) * (self.time)
-            pos_y = self.y - self.speed * math.sin(math.radians(self.angle)) * (self.time) + 0.5 * self.gravity * (self.time / 1000) ** 2 
+            pos_y = self.y - self.speed * math.sin(math.radians(self.angle)) * (self.time) + 0.5 * self.gravity * (self.time ) ** 2 
+            pygame.draw.circle(self.image, (255, 0, 0), (pos_x, pos_y), 5000)
             print(pos_x, pos_y)
-
             # Mettre à jour la position et la collider du projectile
             self.rect.x = pos_x
             self.rect.y = pos_y
+            print(self.rect.x, self.rect.y)
             self.collider = self.rect
 
             # Si le projectile a atteint le temps d'explosion, le faire exploser
-            if self.time >= self.timeToExplode:
-                self.isAlive = False
-                self.explode()
+        if self.time >= self.timeToExplode:
+            self.isAlive = False
+            self.explode()
     
     
     def explode(self):
