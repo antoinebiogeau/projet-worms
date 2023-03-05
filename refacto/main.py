@@ -78,9 +78,13 @@ while isRunning:
             pygame.quit()
         if event.type == PLAYER_SWITCH_EVENT:
             switchPlayer()
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_w:
+            if playerOne.isCurrent:
+                playerOne.currentWeapon = 1 if playerOne.currentWeapon == 0 else 1
+            else:
+                playerTwo.currentWeapon = 1 if playerTwo.currentWeapon == 0 else 1
         
     Key().update()
-    
     clock.tick(60)
 pygame.quit()
 
