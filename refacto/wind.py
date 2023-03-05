@@ -1,16 +1,17 @@
+import random
+
 class Wind:
     instance = None
 
-    def __init__(self):
-        self.wind = (0,0)
-
-    def __call__(self, *args, **kwds):
-        if self.instance is None:
-            self.instance = super().__new__(self)
-        return self.instance
+    def __new__(cls):
+        if cls.instance is None:
+            cls.instance = super().__new__(cls)
+            cls.instance.wind = (0, 0)
+        return cls.instance
 
     def getWind(self):
-        return self.wind()
+        return self.wind
 
     def update(self):
-        print("Updating wind")
+        self.wind = (random.randint(-5, 5), random.randint(-5, 5))
+        print(f"{self.wind[0]}:{self.wind[1]}")

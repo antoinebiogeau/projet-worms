@@ -28,6 +28,8 @@ groundCollider = pygame.Rect(Constant.GROUND_POSITION)
 
 #pygame.time.set_timer(pygame.USEREVENT+1,5)
 PLAYER_SWITCH_EVENT = pygame.USEREVENT + 1
+WIND_SWITCH_EVENT = pygame.USEREVENT + 2
+pygame.time.set_timer(WIND_SWITCH_EVENT, 5000)
 
 
 def switchPlayer():
@@ -78,12 +80,14 @@ while isRunning:
             pygame.quit()
         if event.type == PLAYER_SWITCH_EVENT:
             switchPlayer()
+        if event.type == WIND_SWITCH_EVENT:
+            Wind().update()
         if event.type == pygame.KEYDOWN and event.key == pygame.K_w:
             if playerOne.isCurrent:
                 playerOne.currentWeapon = 1 if playerOne.currentWeapon == 0 else 1
             else:
                 playerTwo.currentWeapon = 1 if playerTwo.currentWeapon == 0 else 1
-        
+    
     Key().update()
     clock.tick(60)
 pygame.quit()
