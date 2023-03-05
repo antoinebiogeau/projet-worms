@@ -1,64 +1,83 @@
-import math
 import pygame
+from wind import Wind
+
+class Projectile:
+    def __init__(self, position, velocity, type):
+        self.rect = pygame.Rect(position[0],position[1], 10,10)
+        self.velocity = velocity
+        self.time = 0
+        self.type = type
+        self.is_exploding = False
+        self.gravity = 9.81
+        self.timeBeforeExplode = 0
+        self.timeAfterExplode = 0
 
 
-class projectile():
-    def __init__(self, direction, speed, damage, owner , type, angle):
-        self.direction = direction
-        self.speed = speed
-        self.damage = damage
-        self.weight = 0
-        self.angle = angle
-        self.owner = owner
-        self.collider = Rect(self.x, self.y, 32,32)
-        self.isAlive = True
-        if type == "GF":
-            self.image = pygame.image.load("assets/graphics/grenade.png")
-            self.rect = self.image.get_rect()
-            self.gravity =8,81  # Gravité à appliquer
-            self.timeToExplode = 5000  # Temps en millisecondes avant explosion
-            self.startTime = pygame.time.get_ticks()  # Temps de création de la grenade
-            weight = 10
-            
-        elif type == "GSF":
-            self.image = pygame.image.load("assets/graphics/grenade.png")
-            self.rect = self.image.get_rect()
-            self.gravity = 0.2
-            self.timeToExplode = 5000
-            self.startTime = pygame.time.get_ticks()
-            weight = 10
-            
-        elif type == "RK":
-            self.image = pygame.image.load("assets/graphics/rocket.png")
-            self.rect = self.image.get_rect()
-            self.gravity = 0.2
-            self.wind = 0.0  # Vent à appliquer
-            self.explosionRadius = 64  # Rayon de l'explosion
-            self.hasExploded = False
-            self.weight = 10
 
-    def calculate_trajectory(self, time):
-        # Convertir l'angle en radians
-        angle_radians = math.radians(self.angle)
+    #rocket = high init speed, explode at impact 
+
+    def update(self, screen):
+        if self.type == 0:
+            self.time += 0.1
+            self.timeBeforeExplode += 0.1
+            self.rect.x = (self.velocity[0] * 2) * self.time + self.rect.x + Wind().getWind()[0] * 0.5
+            self.rect.y = self.gravity/2 * self.time ** 2 + (self.velocity[1] * 2) * self.time + self.rect.y + Wind().getWind()[1] * 0.5
+        elif self.type == 1 and not self.is_exploding:
+            self.time += 0.1
+            self.timeBeforeExplode += 0.1
+            self.rect.x = self.velocity[0] * self.time + self.rect.x
+            self.rect.y = self.gravity/2 * self.time ** 2 + self.velocity[1] * self.time + self.rect.y
+            if self.timeBeforeExplode > 10:
+                self.is_exploding = True
+        elif self.type == 2 and not self.is_exploding:
+            self.time += 0.1
+            self.timeBeforeExplode += 0.1
+            self.rect.x = self.velocity[0] * self.time + self.rect.x + Wind().getWind()[0] * 0.5
+            self.rect.y = self.gravity/2 * self.time ** 2 + self.velocity[1] * self.time + self.rect.y + Wind().getWind()[1] * 0.5
+            if self.timeBeforeExplode > 10:
+                self.is_exploding = True
+        pygame.draw.rect(screen, (255,0,0), self.rect)
         
-        # Calculer la vitesse initiale en x et en y
-        velocity_x = self.speed * math.cos(angle_radians)
-        velocity_y = self.speed * math.sin(angle_radians)
-        
-        # Calculer la position en x et en y du projectile à un instant donné
-        pos_x = self.direction[0] + velocity_x * time
-        pos_y = self.direction[1] + velocity_y * time - 0.5 * self.gravity * time**2
-        
-        # Prendre en compte le poids du projectile
-        pos_y += 0.5 * self.weight * self.gravity * time**2
-        
-        return (pos_x, pos_y)
+
+    def collide(self, target, target_type=1):
+        if target_type == 1:
+            if self.rect.colliderect(target.rect):
+                self.is_exploding = True
+        else: 
+            if self.rect.colliderect(target):
+                self.gravity = 0
+                self.time = 0
+                if self.type == 0:
+                    self.velocity = (0,0)
+                    self.is_exploding = True
+                else:
+                    self.velocity = (self.velocity[0] * 0.5, self.velocity[1] * .5)
+            else:
+                if self.type == 1 or self.type == 2:
+                    self.gravity = 9.81
+                    
+                    
     
-    def move(self, time_elapsed):
-        # Calculer la nouvelle position du projectile
-        new_pos = self.calculate_trajectory(time_elapsed)
+    def explode(self, screen, targets):
+        if self.is_exploding:
+            explosion = pygame.draw.circle(screen, (255,0,0), (self.rect.x, self.rect.y), 25)
+            for target in targets:
+                if target.rect.colliderect(explosion):
+                    distance_x = explosion.centerx - target.rect.centerx
+                    distance_y = explosion.centery - target.rect.centery
+                    distance = distance_x ** 2 + distance_y ** 2
+                    target.hp -= distance * 0.02
+            self.timeAfterExplode += 0.1
+            if self.timeAfterExplode > 2:
+                return True
+            else:
+                return False
         
-        # Mettre à jour la position du projectile
-        self.direction = new_pos
-        self.collider.x = new_pos[0]
-        self.collider.y = new_pos[1]
+            
+
+
+
+    
+        
+
+
