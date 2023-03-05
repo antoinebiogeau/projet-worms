@@ -39,6 +39,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = position[1]
         self.team = team
         self.canShoot = True
+        self.currentWeapon = 0
+        self.imageFacing = "right"
 
     def update(self, screen):
         if self.isCurrent:
@@ -54,12 +56,18 @@ class Player(pygame.sprite.Sprite):
             #print(self.constraints["isFalling"])
         if self.actions["shooting_stance"]:
             pygame.draw.line(screen, (255,0,0), (self.rect.x + self.rect.width / 2, self.rect.y + self.rect.height / 2),  (self.rect.x + self.rect.width/2 + self.xAngle, self.rect.y + self.rect.height/2 + self.yAngle))
-
+        if self.actions["walk_left"] and self.imageFacing == "right":
+            self.image = pygame.transform.flip(self.image, True, False)
+            self.imageFacing = "left"
+        if self.actions["walk_right"] and self.imageFacing == "left":
+            self.image = pygame.transform.flip(self.image, True, False)
+            self.imageFacing = "right"
         screen.blit(self.image, self.rect)
         pygame.draw.rect(screen, (255,0,0) if self.team == 0 else (0,0,255), (self.rect.x, self.rect.y - 10, self.rect.width  * (self.hp / 100), 5))
         pygame.draw.rect(screen, (100,0,0) if self.team == 0 else (0,0,100), (self.rect.x, self.rect.y - 10, self.rect.width, 5), 1)
         Text().render(screen, "Hp : " + str(self.hp), (self.rect.x, self.rect.y - 30), (100,0,0) if self.team == 0 else (0,0,100))
-            
+        weaponText = f"Weapon : { 'grenade' if self.currentWeapon == 1 else 'rocket'}"
+        Text().render(screen, weaponText, (20,10),(20,20,20), bigFont=True)
     def collide(self):
         if self.rect.y + self.rect.height > Constant.GROUND_LEVEL:
             self.constraints["isFalling"] = False
@@ -68,11 +76,11 @@ class Player(pygame.sprite.Sprite):
 
     
     def checkActions(self):
-            if Key().get_key_down(pygame.K_RIGHT):
+            if Key().get_key_down(pygame.K_RIGHT) and not self.actions["walk_left"]:
                 self.actions["walk_right"] = True
             else:
                 self.actions["walk_right"] = False
-            if Key().get_key_down(pygame.K_LEFT):
+            if Key().get_key_down(pygame.K_LEFT) and not self.actions["walk_right"]:
                 self.actions["walk_left"] = True
             else:
                 self.actions["walk_left"] = False
@@ -93,6 +101,7 @@ class Player(pygame.sprite.Sprite):
                     if (self.xAngle < 100):
                         self.xAngle += 1
                         self.yAngle -= 1 if self.xAngle < 0 else -1
+
 
 
         #if shift pressed, put player in shoot stance
