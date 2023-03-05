@@ -2,6 +2,8 @@ import pygame
 import Constant
 from key import Key
 from Projectile import Projectile
+from Text import Text
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, position, team):
         super().__init__()
@@ -56,7 +58,7 @@ class Player(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
         pygame.draw.rect(screen, (255,0,0) if self.team == 0 else (0,0,255), (self.rect.x, self.rect.y - 10, self.rect.width  * (self.hp / 100), 5))
         pygame.draw.rect(screen, (100,0,0) if self.team == 0 else (0,0,100), (self.rect.x, self.rect.y - 10, self.rect.width, 5), 1)
-
+        Text().render(screen, "Hp : " + str(self.hp), (self.rect.x, self.rect.y - 30), (100,0,0) if self.team == 0 else (0,0,100))
             
     def collide(self):
         if self.rect.y + self.rect.height > Constant.GROUND_LEVEL:

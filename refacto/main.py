@@ -4,6 +4,7 @@ from player import Player
 from key import Key
 from Projectile import Projectile
 from wind import Wind
+from Text import Text
 
 pygame.init()
 
@@ -43,7 +44,6 @@ while isRunning:
     screen.blit(terrain, (0,0))
     #screen.blit(terrainMask.to_surface(unsetcolor=(0,0,0,0),setcolor=(255,255,255,255)),(0,-200))
     pygame.draw.rect(screen, Constant.GROUND_COLOR, Constant.GROUND_POSITION)
-    
     playerOne.update(screen)
     playerTwo.update(screen)
     potentialShoot = playerOne.shoot() if playerOne.isCurrent else playerTwo.shoot()
