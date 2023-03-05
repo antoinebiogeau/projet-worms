@@ -18,7 +18,10 @@ class Projectile:
 
     def update(self, screen):
         if self.type == 0:
-            pass
+            self.time += 0.1
+            self.timeBeforeExplode += 0.1
+            self.rect.x = (self.velocity[0] * 2) * self.time + self.rect.x + Wind().getWind()[0] * 0.5
+            self.rect.y = self.gravity/2 * self.time ** 2 + (self.velocity[1] * 2) * self.time + self.rect.y + Wind().getWind()[1] * 0.5
         elif self.type == 1 and not self.is_exploding:
             self.time += 0.1
             self.timeBeforeExplode += 0.1
@@ -26,7 +29,7 @@ class Projectile:
             self.rect.y = self.gravity/2 * self.time ** 2 + self.velocity[1] * self.time + self.rect.y + Wind().getWind()[1] * 0.5
             if self.timeBeforeExplode > 10:
                 self.is_exploding = True
-            pygame.draw.rect(screen, (255,0,0), self.rect)
+        pygame.draw.rect(screen, (255,0,0), self.rect)
         
 
     def collide(self, target, target_type=1):
@@ -35,9 +38,11 @@ class Projectile:
                 self.is_exploding = True
         else: 
             if self.rect.colliderect(target):
-                self.gravity = 0
+                if self.type == 1:
+                    self.gravity = 0
                 self.time = 0
                 if self.type == 0:
+                    self.velocity = (0,0)
                     self.is_exploding = True
                 else:
                     self.velocity = (self.velocity[0] * 0.5, self.velocity[1] * .5)
