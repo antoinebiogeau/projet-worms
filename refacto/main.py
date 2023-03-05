@@ -6,6 +6,7 @@ from Projectile import Projectile
 from wind import Wind
 from Text import Text
 from Menu import Menu
+from GameOver import Restart
 
 pygame.init()
 
@@ -134,7 +135,24 @@ while isRunning:
         Key().update()
         clock.tick(60)
     while Gameover:
-        pass
+        quit_button_pos = (screen.get_width() / 2 - 50, screen.get_height() / 2 + 50)
+        try:
+            Restart()
+        except Exception as exception:
+            print("Une erreur inattendue s'est produite :", exception)
+
+        # Handle events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                Gameover = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if quit_button_pos[0] < pygame.mouse.get_pos()[0] < \
+                        quit_button_pos[0] + 100 and quit_button_pos[1] < pygame.mouse.get_pos()[1] < quit_button_pos[
+                    1] + 50:
+                    running = False
+                    Gameover = False
+                    isRunning = False
 pygame.quit()
 
 
