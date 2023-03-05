@@ -19,8 +19,10 @@ background = pygame.image.load("assets/bg.webp").convert()
 terrain = pygame.image.load("assets/terrain.png").convert_alpha()
 terrainMask = pygame.mask.from_surface(terrain)
 playerOne = Player((20,0), 0)
+playerOneSecond = Player((30,0),0)
 playerTwo = Player((220,0), 1)
-Players = [playerOne, playerTwo]
+playerTwoSecond = Player((210,0), 1)
+Players = [playerOne, playerTwo, playerOneSecond, playerTwoSecond]
 current_player = 0
 playerOne.isCurrent = True 
 menu = True
@@ -39,15 +41,28 @@ pygame.time.set_timer(WIND_SWITCH_EVENT, 5000)
 
 
 def switchPlayer():
+    global current_player
+    print(current_player)
+    Players[current_player].isCurrent = not Players[current_player].isCurrent
+    current_player += 1
+    if current_player > len(Players):
+        current_player = 0
+    Players[current_player].isCurrent = True
+    Players[current_player].canShoot = True
+    
     print("Switching players")
-    if playerOne.isCurrent:
-        playerOne.isCurrent = not playerOne.isCurrent   
-        playerTwo.isCurrent = True
-        playerTwo.canShoot = True        
-    else:
-        playerTwo.isCurrent = not playerTwo.isCurrent
-        playerOne.isCurrent = True
-        playerOne.canShoot = True  
+
+def inTurnSwitch():
+    global current_player
+    global Players
+    currentTeam = Players[current_player].team
+    for i in range(len(Players)):
+        if Players[i].team == currentTeam and i != current_player:
+            Players[current_player].isCurrent = False
+            Players[current_player].canShoot = False
+            Players[current_player], Players[i] = Players[i], Players[current_player]
+            Players[current_player].isCurrent = True
+            Players[current_player].canShoot = True
 
 while isRunning:
     while menu:
@@ -79,15 +94,13 @@ while isRunning:
         screen.blit(terrain, (0,0))
         #screen.blit(terrainMask.to_surface(unsetcolor=(0,0,0,0),setcolor=(255,255,255,255)),(0,-200))
         pygame.draw.rect(screen, Constant.GROUND_COLOR, Constant.GROUND_POSITION)
-        playerOne.update(screen)
-        playerTwo.update(screen)
-        if playerOne.isCurrent:
-            weaponText = f"Weapon : { 'grenade' if playerOne.currentWeapon == 1 else 'light-grenade' if playerOne.currentWeapon == 2 else 'rocket'}"
-            Text().render(screen, weaponText, (20,10),(20,20,20), bigFont=True)
-        else:
-            weaponText = f"Weapon : { 'grenade' if playerTwo.currentWeapon == 1 else 'light-grenade' if playerTwo.currentWeapon == 2 else 'rocket'}"
-            Text().render(screen, weaponText, (20,10),(20,20,20), bigFont=True)
-        potentialShoot = playerOne.shoot() if playerOne.isCurrent else playerTwo.shoot()
+        for player in Players:
+            player.update(screen)
+            player.collide()
+        ground = pygame.Rect(Constant.GROUND_POSITION)
+        weaponText = f"Weapon : {'grenade' if Players[current_player].currentWeapon == 1 else 'light-grenade' if Players[current_player].currentWeapon == 2 else 'rocket'}"
+        Text().render(screen, weaponText, (20,10),(20,20,20), bigFont=True)
+        potentialShoot = Players[current_player].shoot()
         if potentialShoot is not None:
             projectileInstances.append(potentialShoot)
             pygame.time.set_timer(PLAYER_SWITCH_EVENT, 1000, True)
@@ -105,9 +118,7 @@ while isRunning:
         
 
         #playerOne.drawColliders(screen)
-        playerOne.collide()
-        playerTwo.collide()
-        ground = pygame.Rect(Constant.GROUND_POSITION)
+        
         #playerOne.collide(ground)
         if playerOne.hp <= 0 or playerTwo.hp <= 0:
             running = False
@@ -131,6 +142,8 @@ while isRunning:
                     playerTwo.currentWeapon += 1
                     if playerTwo.currentWeapon > 2:
                         playerTwo.currentWeapon = 0
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+                inTurnSwitch()           
     
         Key().update()
         clock.tick(60)
