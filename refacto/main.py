@@ -63,8 +63,10 @@ while isRunning:
         potentialShoot = None
     for projectile in projectileInstances:
         projectile.update(screen)
-        if projectile.collide(playerOne) or projectile.collide(playerTwo) or projectile.collide(groundCollider, 0) or projectile.rect.x < -1000 or projectile.rect.x > 1000 or projectile.rect.y > 500:
-            projectile.explode(screen)
+        projectile.collide(playerOne)
+        projectile.collide(playerTwo)
+        projectile.collide(ground, 0)
+        if projectile.explode(screen, Players) or projectile.rect.x < -1000 or projectile.rect.x > 1000 or projectile.rect.y > 500:
             pygame.display.flip()
 
             projectileInstances.remove(projectile)
@@ -76,12 +78,8 @@ while isRunning:
     playerTwo.collide()
     ground = pygame.Rect(Constant.GROUND_POSITION)
     #playerOne.collide(ground)
-    if Players[current_player].hp <= 0:
-        current_player.isCurrent = False
-        current_player = (current_player + 1) % len(Players)
-        current_player.isCurrent = True
-    if playerOne.hp <= 0 or playerTwo.hp <= 0:
-        isRunning = False
+    #if playerOne.hp <= 0 or playerTwo.hp <= 0:
+     #   isRunning = False
     pygame.display.flip()
     #checkEvents
     for event in pygame.event.get():
