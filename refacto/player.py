@@ -36,6 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = position[0]
         self.rect.y = position[1]
         self.team = team
+        self.canShoot = True
 
     def update(self, screen):
         if self.isCurrent:
@@ -46,7 +47,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.y += 3 + self.velocity["y"]
         else:
             self.rect.y += self.velocity["y"]
-        if not self.actions["shooting_stance"]:
+        if not self.actions["shooting_stance"] and self.isCurrent:
             self.rect.x += 2 if self.actions["walk_right"] else -2 if  self.actions["walk_left"] else 0
             #print(self.constraints["isFalling"])
         if self.actions["shooting_stance"]:
@@ -85,8 +86,7 @@ class Player(pygame.sprite.Sprite):
                 if (Key().get_key_down(pygame.K_LEFT)):
                     if (self.xAngle > - 100):
                         self.xAngle -= 1
-                        self.yAngle -= 1 if self.xAngle > 0 else -1
-                    
+                        self.yAngle -= 1 if self.xAngle > 0 else -1   
                 if (Key().get_key_down(pygame.K_RIGHT)):
                     if (self.xAngle < 100):
                         self.xAngle += 1
@@ -110,10 +110,11 @@ class Player(pygame.sprite.Sprite):
             self.time = 0
 
     def shoot(self):
-        if self.actions["shooting_stance"]:
+        if self.actions["shooting_stance"] and self.canShoot:
             if Key().get_key_down(pygame.K_r):
                 print("shooting")
                 self.actions["shooting_stance"] = False
+                self.canShoot = False
                 return Projectile((self.rect.x + self.rect.width / 2 + self.xAngle, self.rect.y + self.rect.height / 2 + self.yAngle), (self.xAngle / 10, self.yAngle / 10))
 
 

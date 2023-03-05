@@ -23,7 +23,20 @@ playerOne.isCurrent = True
 
 projectileInstances = []
 
-pygame.time.set_timer(pygame.USEREVENT+1,5)
+#pygame.time.set_timer(pygame.USEREVENT+1,5)
+PLAYER_SWITCH_EVENT = pygame.USEREVENT + 1
+
+
+def switchPlayer():
+    print("Switching players")
+    if playerOne.isCurrent:
+        playerOne.isCurrent = not playerOne.isCurrent   
+        playerTwo.isCurrent = True
+        playerTwo.canShoot = True        
+    else:
+        playerTwo.isCurrent = not playerTwo.isCurrent
+        playerOne.isCurrent = True
+        playerOne.canShoot = True  
 
 while isRunning:
     screen.blit(background,(0,-100))
@@ -35,15 +48,9 @@ while isRunning:
     playerTwo.update(screen)
     potentialShoot = playerOne.shoot() if playerOne.isCurrent else playerTwo.shoot()
     if potentialShoot is not None:
-        if playerOne.isCurrent:
-            playerTwo.isCurrent = True
-            playerOne.isCurrent = not playerOne.isCurrent
-            
-        else:
-            playerOne.isCurrent = True
-            playerTwo.isCurrent = not playerTwo.isCurrent
-            
         projectileInstances.append(potentialShoot)
+        pygame.time.set_timer(PLAYER_SWITCH_EVENT, 1000, True)
+        potentialShoot = None
     for projectile in projectileInstances:
         projectile.update(screen)
         if projectile.collide(playerOne) or projectile.collide(playerTwo) or projectile.rect.x < -1000 or projectile.rect.x > 1000 or projectile.rect.y > 500:
@@ -64,9 +71,15 @@ while isRunning:
         isRunning = False
     pygame.display.flip()
     #checkEvents
-    Key().update()
     for event in pygame.event.get():
-        if event.type == pygame.USEREVENT+1:
-            Wind().update()
+        if event.type == pygame.QUIT:
+            pygame.quit()
+        if event.type == PLAYER_SWITCH_EVENT:
+            switchPlayer()
+    Key().update()
+    
     clock.tick(60)
 pygame.quit()
+
+
+            
