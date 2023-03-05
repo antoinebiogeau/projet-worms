@@ -49,6 +49,11 @@ def switchPlayer():
     current_player += 1
     if current_player >= len(Players):
         current_player = 0
+    while(Players[current_player].hp <= 0):
+        if Players[current_player].hp <= 0:
+            current_player += 1
+        if current_player >= len(Players):
+            current_player = 0
     Players[current_player].isCurrent = True
     Players[current_player].canShoot = True
     
@@ -72,13 +77,12 @@ def checkVictory():
     for player in Players:
         if player.hp <= 0:
             deaths[player.team] += 1
-    deadTeams = ''
     if deaths[0] == 2 and deaths[1] == 2 and deaths[2] < 2:
         return "G"
     elif deaths[0] == 2 and deaths[1] < 2 and deaths[2] == 2:
         return "B"
     elif deaths[0] < 2 and deaths[1] == 2 and deaths[2] == 2:
-        return "A"
+        return "R"
     elif deaths[0] == 2 and deaths[1] == 2 and deaths[2] == 2:
         return "N"
     else:
@@ -164,8 +168,10 @@ while isRunning:
                 inTurnSwitch()           
     
         Key().update()
+        print(checkVictory())
         if checkVictory() is not None:
             Gameover = True
+            break
         clock.tick(60)
     while Gameover:
         quit_button_pos = (screen.get_width() / 2 - 50, screen.get_height() / 2 + 50)
