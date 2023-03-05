@@ -128,6 +128,5 @@ class Player(pygame.sprite.Sprite):
                 self.canShoot = False
                 return Projectile((self.rect.x + self.rect.width / 2 + self.xAngle, self.rect.y + self.rect.height / 2 + self.yAngle), (self.xAngle / 10, self.yAngle / 10))
 
-
     def drawColliders(self, screen):
         screen.blit(self.collider["mask"].to_surface(setcolor=(0,255,0,255)), (self.rect.x + 5, self.rect.y + self.rect.height))

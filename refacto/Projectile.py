@@ -29,10 +29,14 @@ class Projectile:
         self.rect.y = 9.81/2 * self.time ** 2 + self.velocity[1] * self.time + self.rect.y
         pygame.draw.rect(screen, (255,0,0), self.rect)
 
-    def collide(self, target):
-       if self.rect.colliderect(target.rect):
-           target.hp -= 50
-           print("Projectile collide")
+    def collide(self, target, target_type=1):
+       if target_type == 1:
+            if self.rect.colliderect(target.rect):
+                target.hp -= 50
+                print("Projectile collide")
+                return True
+            return False
+       elif self.rect.colliderect(target):
            return True
        return False
     

@@ -24,6 +24,8 @@ playerOne.isCurrent = True
 
 projectileInstances = []
 
+groundCollider = pygame.Rect(Constant.GROUND_POSITION)
+
 #pygame.time.set_timer(pygame.USEREVENT+1,5)
 PLAYER_SWITCH_EVENT = pygame.USEREVENT + 1
 
@@ -53,7 +55,7 @@ while isRunning:
         potentialShoot = None
     for projectile in projectileInstances:
         projectile.update(screen)
-        if projectile.collide(playerOne) or projectile.collide(playerTwo) or projectile.rect.x < -1000 or projectile.rect.x > 1000 or projectile.rect.y > 500:
+        if projectile.collide(playerOne) or projectile.collide(playerTwo) or projectile.collide(groundCollider, 0) or projectile.rect.x < -1000 or projectile.rect.x > 1000 or projectile.rect.y > 500:
             projectileInstances.remove(projectile)
             del projectile
     
@@ -76,11 +78,6 @@ while isRunning:
             pygame.quit()
         if event.type == PLAYER_SWITCH_EVENT:
             switchPlayer()
-        if event.type == pygame.K_w:
-            if playerOne.isCurrent:
-                playerOne.currentWeapon = 1 if playerOne.currentWeapon == 0 else 1
-            else:
-                playerTwo.currentWeapon = 1 if playerTwo.currentWeapon == 0 else 1
         
     Key().update()
     
