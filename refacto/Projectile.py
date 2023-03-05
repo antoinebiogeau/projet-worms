@@ -32,8 +32,10 @@ class Projectile:
            return True
        return False
     
-    def explode():
-        pass
+    def explode(self, screen):
+        pygame.draw.circle(screen, (255,0,0), (self.rect.x, self.rect.y), 50)
+
+
 
     
         
