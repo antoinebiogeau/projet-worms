@@ -64,6 +64,9 @@ while isRunning:
     for projectile in projectileInstances:
         projectile.update(screen)
         if projectile.collide(playerOne) or projectile.collide(playerTwo) or projectile.collide(groundCollider, 0) or projectile.rect.x < -1000 or projectile.rect.x > 1000 or projectile.rect.y > 500:
+            projectile.explode(screen)
+            pygame.display.flip()
+
             projectileInstances.remove(projectile)
             del projectile
     
