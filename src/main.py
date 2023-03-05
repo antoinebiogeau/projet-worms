@@ -1,8 +1,8 @@
 import pygame
-import Constant
+import constant
 from player import Player
 from key import Key
-from Projectile import Projectile
+from projectile import Projectile
 from wind import Wind
 from Text import Text
 from Menu import Menu
