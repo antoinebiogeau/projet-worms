@@ -3,11 +3,13 @@ import Constant
 from player import Player
 from key import Key
 from Projectile import Projectile
+from wind import Wind
+
 pygame.init()
 
 pygame.display.set_caption("Worms")
 screen = pygame.display.set_mode((640, 480))
-pygame.time.Clock().tick(60)
+clock = pygame.time.Clock()
 
 isRunning = True
 background = pygame.image.load("assets/bg.webp").convert()
@@ -21,7 +23,7 @@ playerOne.isCurrent = True
 
 projectileInstances = []
 
-
+pygame.time.set_timer(pygame.USEREVENT+1,5)
 
 while isRunning:
     screen.blit(background,(0,-100))
@@ -63,5 +65,8 @@ while isRunning:
     pygame.display.flip()
     #checkEvents
     Key().update()
-
+    for event in pygame.event.get():
+        if event.type == pygame.USEREVENT+1:
+            Wind().update()
+    clock.tick(60)
 pygame.quit()

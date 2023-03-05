@@ -43,11 +43,11 @@ class Player(pygame.sprite.Sprite):
             self.jump()
             #draw UI
         if self.constraints["isFalling"]:
-            self.rect.y += 1 + self.velocity["y"]
+            self.rect.y += 3 + self.velocity["y"]
         else:
             self.rect.y += self.velocity["y"]
         if not self.actions["shooting_stance"]:
-            self.rect.x += 1 if self.actions["walk_right"] else -1 if  self.actions["walk_left"] else 0
+            self.rect.x += 2 if self.actions["walk_right"] else -2 if  self.actions["walk_left"] else 0
             #print(self.constraints["isFalling"])
         if self.actions["shooting_stance"]:
             pygame.draw.line(screen, (255,0,0), (self.rect.x + self.rect.width / 2, self.rect.y + self.rect.height / 2),  (self.rect.x + self.rect.width/2 + self.xAngle, self.rect.y + self.rect.height/2 + self.yAngle))
@@ -101,20 +101,17 @@ class Player(pygame.sprite.Sprite):
 
     def jump(self):
         if self.actions["jump"]:
-            self.velocity["y"] = -3
+            self.velocity["y"] = -5
             self.time += 0.1
-        if self.time > 5:
+        if self.time > 2:
             self.velocity["y"] = 0
             self.actions["jump"] = False
         if self.constraints["isFalling"] == False:
             self.time = 0
 
     def shoot(self):
-        print(self.isCurrent)
         if self.actions["shooting_stance"]:
-            print("Current : " + str(self.team))
             if Key().get_key_down(pygame.K_r):
-                pygame.time.delay(1000)
                 print("shooting")
                 self.actions["shooting_stance"] = False
                 return Projectile((self.rect.x + self.rect.width / 2 + self.xAngle, self.rect.y + self.rect.height / 2 + self.yAngle), (self.xAngle / 10, self.yAngle / 10))

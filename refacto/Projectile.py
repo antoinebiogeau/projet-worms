@@ -24,7 +24,7 @@ class Projectile:
             self.rect.x = self.velocity[0] * self.time + self.rect.x
             self.rect.y = 9.81/2 * self.time ** 2 + self.velocity[1] * self.time + self.rect.y
             pygame.draw.rect(screen, (255,0,0), self.rect)
-        self.time += 0.005
+        self.time += 0.1
         self.rect.x = self.velocity[0] * self.time + self.rect.x
         self.rect.y = 9.81/2 * self.time ** 2 + self.velocity[1] * self.time + self.rect.y
         pygame.draw.rect(screen, (255,0,0), self.rect)
