@@ -67,7 +67,7 @@ while isRunning:
         current_player.isCurrent = False
         current_player = (current_player + 1) % len(Players)
         current_player.isCurrent = True
-    if all(player.hp <= 0 for player in Players):
+    if playerOne.hp <= 0 or playerTwo.hp <= 0:
         isRunning = False
     pygame.display.flip()
     #checkEvents
