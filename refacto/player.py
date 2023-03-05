@@ -125,7 +125,7 @@ class Player(pygame.sprite.Sprite):
                 print("shooting")
                 self.actions["shooting_stance"] = False
                 self.canShoot = False
-                return Projectile((self.rect.x + self.rect.width / 2 + self.xAngle, self.rect.y + self.rect.height / 2 + self.yAngle), (self.xAngle / 10, self.yAngle / 10))
+                return Projectile((self.rect.x + self.rect.width / 2 + self.xAngle, self.rect.y + self.rect.height / 2 + self.yAngle), (self.xAngle / 20, self.yAngle / 20), self.currentWeapon)
 
     def drawColliders(self, screen):
         screen.blit(self.collider["mask"].to_surface(setcolor=(0,255,0,255)), (self.rect.x + 5, self.rect.y + self.rect.height))
