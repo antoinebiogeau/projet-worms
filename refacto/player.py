@@ -63,8 +63,15 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, True, False)
             self.imageFacing = "right"
         screen.blit(self.image, self.rect)
-        pygame.draw.rect(screen, (255,0,0) if self.team == 0 else (0,0,255), (self.rect.x, self.rect.y - 10, self.rect.width  * (self.hp / 100), 5))
-        pygame.draw.rect(screen, (100,0,0) if self.team == 0 else (0,0,100), (self.rect.x, self.rect.y - 10, self.rect.width, 5), 1)
+        if self.team == 0:
+            pygame.draw.rect(screen, (255,0,0), (self.rect.x, self.rect.y - 10, self.rect.width, 5), 1)
+            pygame.draw.rect(screen, (255,0,0), (self.rect.x, self.rect.y - 10, self.rect.width * (self.hp / 100), 5))
+        elif self.team == 1:
+            pygame.draw.rect(screen, (0,0,255), (self.rect.x, self.rect.y - 10, self.rect.width, 5), 1)
+            pygame.draw.rect(screen, (0,0,255), (self.rect.x, self.rect.y - 10, self.rect.width * (self.hp / 100), 5))
+        else:
+            pygame.draw.rect(screen, (0,255,0), (self.rect.x, self.rect.y - 10, self.rect.width, 5), 1)
+            pygame.draw.rect(screen, (0,255,0), (self.rect.x, self.rect.y - 10, self.rect.width * (self.hp / 100), 5))
         Text().render(screen, "Hp : " + str(self.hp), (self.rect.x, self.rect.y - 30), (100,0,0) if self.team == 0 else (0,0,100))
        
     def collide(self):

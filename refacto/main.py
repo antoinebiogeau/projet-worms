@@ -22,7 +22,9 @@ playerOne = Player((20,0), 0)
 playerOneSecond = Player((30,0),0)
 playerTwo = Player((220,0), 1)
 playerTwoSecond = Player((210,0), 1)
-Players = [playerOne, playerTwo, playerOneSecond, playerTwoSecond]
+PlayerThree = Player((420,0), 2)
+PlayerThreeSecond = Player((410,0), 2)
+Players = [playerOne, playerTwo, PlayerThree, playerOneSecond, playerTwoSecond, PlayerThreeSecond]
 current_player = 0
 playerOne.isCurrent = True 
 menu = True
@@ -45,7 +47,7 @@ def switchPlayer():
     print(current_player)
     Players[current_player].isCurrent = not Players[current_player].isCurrent
     current_player += 1
-    if current_player > len(Players):
+    if current_player >= len(Players):
         current_player = 0
     Players[current_player].isCurrent = True
     Players[current_player].canShoot = True
@@ -109,6 +111,7 @@ while isRunning:
             projectile.update(screen)
             projectile.collide(playerOne)
             projectile.collide(playerTwo)
+            projectile.collide(PlayerThree)
             projectile.collide(ground, 0)
             if projectile.explode(screen, Players) or projectile.rect.x < -1000 or projectile.rect.x > 1000 or projectile.rect.y > 500:
                 pygame.display.flip()
