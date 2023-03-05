@@ -64,6 +64,24 @@ def inTurnSwitch():
             Players[current_player].isCurrent = True
             Players[current_player].canShoot = True
 
+def checkVictory():
+    global Players
+    deaths = [0,0,0]
+    for player in Players:
+        if player.hp <= 0:
+            deaths[player.team] += 1
+    deadTeams = ''
+    if deaths[0] == 2 and deaths[1] == 2 and deaths[2] < 2:
+        return "G"
+    elif deaths[0] == 2 and deaths[1] < 2 and deaths[2] == 2:
+        return "B"
+    elif deaths[0] < 2 and deaths[1] == 2 and deaths[2] == 2:
+        return "A"
+    elif deaths[0] == 2 and deaths[1] == 2 and deaths[2] == 2:
+        return "N"
+    else:
+        return None
+ 
 while isRunning:
     while menu:
         play_button_pos = (screen.get_width() / 2 - 50, screen.get_height() / 2)
@@ -120,9 +138,6 @@ while isRunning:
         #playerOne.drawColliders(screen)
         
         #playerOne.collide(ground)
-        if playerOne.hp <= 0 or playerTwo.hp <= 0:
-            running = False
-            Gameover = True
 
         pygame.display.flip()
         #checkEvents
@@ -146,11 +161,13 @@ while isRunning:
                 inTurnSwitch()           
     
         Key().update()
+        if checkVictory() is not None:
+            Gameover = True
         clock.tick(60)
     while Gameover:
         quit_button_pos = (screen.get_width() / 2 - 50, screen.get_height() / 2 + 50)
         try:
-            Restart()
+            Restart(checkVictory())
         except Exception as exception:
             print("Une erreur inattendue s'est produite :", exception)
 

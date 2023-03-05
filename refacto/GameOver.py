@@ -14,12 +14,12 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (230, 126, 34)
 
-def Restart():
+def Restart(result):
     # Définition des polices
     title_font = pygame.font.SysFont(None, 72)
     button_font = pygame.font.Font(None, 32)
     screen.blit(background, (0, 0))
-    title_text = title_font.render("Game Over", True, WHITE)
+    title_text = title_font.render("Red team wins" if result == "R" else "Green team wins" if result == "G" else "Blue team wins" if result == "B" else "Nobody won", True, WHITE)
     title_rect = title_text.get_rect(center=(screen_width // 2, screen_height // 2 - 125))
     screen.blit(title_text, title_rect)
     quit_button_rect = pygame.Rect(0, 0, 200, 50)
