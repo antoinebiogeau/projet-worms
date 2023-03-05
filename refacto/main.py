@@ -50,6 +50,12 @@ while isRunning:
     pygame.draw.rect(screen, Constant.GROUND_COLOR, Constant.GROUND_POSITION)
     playerOne.update(screen)
     playerTwo.update(screen)
+    if playerOne.isCurrent:
+        weaponText = f"Weapon : { 'grenade' if playerOne.currentWeapon == 1 else 'rocket'}"
+        Text().render(screen, weaponText, (20,10),(20,20,20), bigFont=True)
+    else:
+        weaponText = f"Weapon : { 'grenade' if playerTwo.currentWeapon == 1 else 'rocket'}"
+        Text().render(screen, weaponText, (20,10),(20,20,20), bigFont=True)
     potentialShoot = playerOne.shoot() if playerOne.isCurrent else playerTwo.shoot()
     if potentialShoot is not None:
         projectileInstances.append(potentialShoot)
@@ -84,9 +90,9 @@ while isRunning:
             Wind().update()
         if event.type == pygame.KEYDOWN and event.key == pygame.K_w:
             if playerOne.isCurrent:
-                playerOne.currentWeapon = 1 if playerOne.currentWeapon == 0 else 1
+                playerOne.currentWeapon = 1 if playerOne.currentWeapon == 0 else 0
             else:
-                playerTwo.currentWeapon = 1 if playerTwo.currentWeapon == 0 else 1
+                playerTwo.currentWeapon = 1 if playerTwo.currentWeapon == 0 else 0
     
     Key().update()
     clock.tick(60)
