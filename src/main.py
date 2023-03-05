@@ -34,7 +34,7 @@ Gameover = False
 
 projectileInstances = []
 
-groundCollider = pygame.Rect(Constant.GROUND_POSITION)
+groundCollider = pygame.Rect(constant.GROUND_POSITION)
 
 #pygame.time.set_timer(pygame.USEREVENT+1,5)
 PLAYER_SWITCH_EVENT = pygame.USEREVENT + 1
@@ -117,11 +117,11 @@ while isRunning:
         screen.blit(background,(0,-100))
         screen.blit(terrain, (0,0))
         #screen.blit(terrainMask.to_surface(unsetcolor=(0,0,0,0),setcolor=(255,255,255,255)),(0,-200))
-        pygame.draw.rect(screen, Constant.GROUND_COLOR, Constant.GROUND_POSITION)
+        pygame.draw.rect(screen, constant.GROUND_COLOR, constant.GROUND_POSITION)
         for player in Players:
             player.update(screen)
             player.collide()
-        ground = pygame.Rect(Constant.GROUND_POSITION)
+        ground = pygame.Rect(constant.GROUND_POSITION)
         weaponText = f"Weapon : {'grenade' if Players[current_player].currentWeapon == 1 else 'light-grenade' if Players[current_player].currentWeapon == 2 else 'rocket'}"
         Text().render(screen, weaponText, (20,10),(20,20,20), bigFont=True)
         potentialShoot = Players[current_player].shoot()

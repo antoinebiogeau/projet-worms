@@ -1,7 +1,7 @@
 import pygame
-import Constant
+import constant
 from key import Key
-from Projectile import Projectile
+from projectile import Projectile
 from Text import Text
 
 class Player(pygame.sprite.Sprite):
@@ -75,7 +75,7 @@ class Player(pygame.sprite.Sprite):
         Text().render(screen, "Hp : " + str(self.hp), (self.rect.x, self.rect.y - 30), (100,0,0) if self.team == 0 else (0,0,100) if self.team == 1 else (0,100,0))
        
     def collide(self):
-        if self.rect.y + self.rect.height > Constant.GROUND_LEVEL:
+        if self.rect.y + self.rect.height > constant.GROUND_LEVEL:
             self.constraints["isFalling"] = False
         else:
             self.constraints["isFalling"] = True
